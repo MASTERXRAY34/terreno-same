@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terreno Premium Frente al Mar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            background: #fff;
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: fixed;
+            right: 40px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 48, 73, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-arrow:hover {
+            background: rgba(0, 82, 130, 1);
+            transform: scale(1.1);
+        }
+
+        .nav-arrow svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .arrow-up {
+            bottom: 100px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .arrow-up.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .arrow-down {
+            bottom: 40px;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #003049 0%, #006494 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            color: white;
+        }
+
+        .hero-content {
+            z-index: 2;
+            padding: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-icons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            font-size: 3rem;
+        }
+
+        .hero-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .hero-icon:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: #8dd4ff;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: transparent;
+            color: white;
+            text-decoration: none;
+            border: 2px solid white;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: #003049;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 50px;
+            background: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 300;
+            margin-bottom: 80px;
+            color: #003049;
+            letter-spacing: 3px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 20px;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #006494;
+            transition: width 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            width: 80%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 30px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #003049;
+            letter-spacing: 1px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Details Section */
+        .details {
+            padding: 120px 50px;
+            background: linear-gradient(to bottom, #f8f9fa, #fff);
+        }
+
+        .details-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 50px 40px;
+            border-left: 3px solid #006494;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+        }
+
+        .detail-item h4 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #003049;
+            font-weight: 400;
+        }
+
+        .detail-item p {
+            color: #666;
+            line-height: 1.9;
+            font-size: 1.05rem;
+        }
+
+        /* Price Section */
+        .price-section {
+            padding: 120px 50px;
+            background: linear-gradient(135deg, #003049, #006494);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-section::before {
+            content: '🌊';
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .price-box {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 60px 50px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-box h3 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+
+        .price-amount {
+            font-size: 4.5rem;
+            font-weight: 300;
+            margin: 30px 0;
+            color: #8dd4ff;
+        }
+
+        .price-detail {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-top: 20px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 120px 50px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            color: #003049;
+        }
+
+        .contact > p {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            color: #666;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 60px;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-item {
+            font-size: 1.1rem;
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-item strong {
+            display: block;
+            margin-bottom: 15px;
+            color: #003049;
+            font-size: 1.2rem;
+        }
+
+        .contact-item a {
+            color: #006494;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: #003049;
+        }
+
+        .contact-icon {
+            width: 28px;
+            height: 28px;
+            vertical-align: middle;
+            margin-right: 10px;
+            stroke: #006494;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .features, .details, .contact, .price-section {
+                padding: 80px 20px;
+            }
+
+            .nav-arrow {
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .hero-icons {
+                font-size: 2rem;
+                gap: 30px;
+            }
+
+            .price-amount {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Arrows -->
+    <div class="nav-arrow arrow-up" id="arrowUp" onclick="scrollToTop()">
+        <svg viewBox="0 0 24 24" fill="none">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </div>
+    <div class="nav-arrow arrow-down" id="arrowDown" onclick="scrollToNext()">
+        <svg viewBox="0 0 24 24" fill="none">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-icons">
+                <span class="hero-icon">🏖️</span>
+                <span class="hero-icon">☀️</span>
+                <span class="hero-icon">🌊</span>
+            </div>
+            <p class="hero-subtitle">Same - Esmeraldas, Ecuador</p>
+            <h1>PARAÍSO FRENTE AL MAR</h1>
+            <p>6,400 m² de oportunidad junto al Resort Casa Blanca</p>
+            <a href="#contact" class="cta-button">Conocer Más</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Características Excepcionales</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌊</div>
+                <h3>Vista al Mar</h3>
+                <p>Ubicación estratégica en zona alta con vistas panorámicas al océano Pacífico</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏨</div>
+                <h3>Desarrollo Hotelero</h3>
+                <p>Ideal para construcción de urbanización o conjunto hotelero de primer nivel</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏖️</div>
+                <h3>Junto a Casa Blanca</h3>
+                <p>Ubicado estratégicamente junto al prestigioso Resort Casa Blanca</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛣️</div>
+                <h3>Acceso Principal</h3>
+                <p>Acceso rápido y seguro a la carretera principal, excelente conectividad</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Details Section -->
+    <section class="details" id="details">
+        <h2 class="section-title">Información del Terreno</h2>
+        <div class="details-content">
+            <div class="detail-item">
+                <h4>📍 Ubicación Estratégica</h4>
+                <p>Same, provincia de Esmeraldas, Ecuador. Zona alta con vista privilegiada a la playa y junto al reconocido Resort Casa Blanca. Ubicación estratégica con acceso directo a vía principal.</p>
+            </div>
+            <div class="detail-item">
+                <h4>📐 Superficie Total</h4>
+                <p>Amplio terreno de 6,400 metros cuadrados, dimensiones ideales para desarrollo de proyectos hoteleros o urbanizaciones de alto nivel.</p>
+            </div>
+            <div class="detail-item">
+                <h4>🏗️ Potencial de Desarrollo</h4>
+                <p>Terreno ideal para construcción de urbanización o conjunto hotelero. Zona en crecimiento con gran potencial turístico y de inversión en la costa esmeraldeña.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Section -->
+    <section class="price-section" id="price">
+        <div class="price-box">
+            <h3>INVERSIÓN</h3>
+            <div class="price-amount">$80</div>
+            <p class="price-detail">Por metro cuadrado</p>
+            <p class="price-detail" style="margin-top: 30px; font-size: 1.5rem; font-weight: 400;">
+                Terreno total: 6,400 m²
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Agenda tu Visita</h2>
+        <p>Descubre personalmente este paraíso en Same, Esmeraldas</p>
+        <a href="tel:+593979571320" class="cta-button">Contactar Ahora</a>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <strong>
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    WhatsApp / Llamadas
+                </strong>
+                <a href="tel:+593979571320">+593 097 957 1320</a>
+            </div>
+            <div class="contact-item">
+                <strong>
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Email
+                </strong>
+                <a href="mailto:ayudadediego@gmail.com">ayudadediego@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <strong>
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    Ubicación
+                </strong>
+                Same, Esmeraldas<br>Junto a Resort Casa Blanca<br>
+                <a href="https://www.google.com/maps?q=0°50'12.4%22N+79°56'02.7%22W" target="_blank">
+                    📍 Ver en Google Maps
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Navigation functionality
+        let currentSection = 0;
+        const sections = ['hero', 'features', 'details', 'price', 'contact'];
+        
+        function scrollToNext() {
+            currentSection = Math.min(currentSection + 1, sections.length - 1);
+            document.getElementById(sections[currentSection]).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function scrollToTop() {
+            currentSection = 0;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Show/hide up arrow based on scroll position
+        window.addEventListener('scroll', function() {
+            const arrowUp = document.getElementById('arrowUp');
+            if (window.scrollY > 300) {
+                arrowUp.classList.add('visible');
+            } else {
+                arrowUp.classList.remove('visible');
+            }
+            
+            // Update current section based on scroll
+            sections.forEach((section, index) => {
+                const element = document.getElementById(section);
+                const rect = element.getBoundingClientRect();
+                if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                    currentSection = index;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
